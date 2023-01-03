@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
 
+use App\Mail\PasswordReset as MailPasswordReset;
+
 class PassportController extends Controller
 {
     /**
@@ -18,13 +20,15 @@ class PassportController extends Controller
      */
     public function register(Request $request)
     {
-        $input = $request->only(['name', 'email', 'password','c_password']);
+        $input = $request->only(['name', 'email', 'password','c_password','role']);
 
         $validate_data = [
             'name' => 'required|string|min:4',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'c_password' => 'required|same:password',
+            'role' => 'required|string',
+            
               
         ];
 
@@ -37,12 +41,15 @@ class PassportController extends Controller
                 'errors' => $validator->errors()
             ]);
         }
- 
+            
+
+
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            'c_password' => Hash::make($input['c_password'])
+            'c_password' => Hash::make($input['c_password']),
+             'role' => $input['role']
              
         ]);
          
@@ -174,6 +181,43 @@ public function single_user(Request $request , $id)
 
        // return $items;
     }
+
+
+
+
+public function password_reset(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        if($user){
+            $otp = rand(0000, 9999);
+            \DB::table('password_resets')->updateOrInsert([
+                'email' => $user->email],
+                ['token' => $otp
+            ]);
+            \Mail::to($request->email)->send(new MailPasswordReset($otp, $user->name));
+            return response()->json(['success' => true, 'message' => 'OTP is send to your email, please verify OTP to continue'], 200);
+        }
+    }
+    public function verifyOtp(Request $request){
+        $verify = \DB::table('password_resets')->where('email', $request->email)
+        ->where('token', $request->otp)
+        ->first();
+        if($verify){
+            if(isset($request->password) && isset($request->confirm_password) && $request->password == $request->confirm_password){
+                User::where('email', $request->email)->update([
+                    'password' => \Hash::make($request->password)
+                ]);
+            \DB::table('password_resets')->where('email', $request->email)->delete();
+            return response()->json(['success' => true, 'message' => 'Password Reset Successfully, Please Login to continue'], 200);
+            }
+            return response()->json(['success' => false, 'message' => 'password doesn\'t match'], 200);
+        }
+        return response()->json(['success' => false, 'message' => 'something went wrong'], 400);
+    }
+
+
+
+
 
 
 }
