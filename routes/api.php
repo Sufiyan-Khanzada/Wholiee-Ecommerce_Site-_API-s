@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PassportController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductsController;
+
 
 
 
@@ -36,6 +38,12 @@ Route::post('delete-cat/{id}', [CategoryController::class, 'destroy_cat']);
 Route::post('{id}/update-cat',[CategoryController::class,'update_cat']);
 
 
+
+Route::post('prod-add', [ProductsController::class, 'store']);
+Route::get('showall-prod', [ProductsController::class, 'allproducts']);
+Route::post('show-single_pro/{id}',[ProductsController::class, 'show_single_product']);
+Route::post('delete-pro/{id}', [ProductsController::class, 'destroy_product']);
+Route::post('{id}/update-pro',[ProductsController::class,'update_products']);
 
 
 
