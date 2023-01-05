@@ -183,6 +183,29 @@ public function single_user(Request $request , $id)
     }
 
 
+    public function update_user(Request $request , $id)
+    {
+          $user = new User();
+            $user = User::find($id);
+            
+          
+            $user->name=$request->name;
+            $user->email=$request->email;
+            $user->password=$request->password;
+            $user->c_password=$request->c_password;
+            $user->role=$request->role;
+            $user->save();
+            
+            
+            
+            return response()->json([
+            'success' => true,
+            'message' => 'Users Details Updated Successfully.'
+        ], 200);
+
+            
+         } 
+
 
 
 public function password_reset(Request $request)

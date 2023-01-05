@@ -24,6 +24,8 @@ Route::post('login', [PassportController::class, 'login']);
 Route::get('get-users', [PassportController::class, 'allusers']);
 Route::post('single-user/{id}', [PassportController::class, 'single_user']);
 Route::post('reset-password', [PassportController::class, 'password_reset']);
+Route::post('{id}/update-user', [PassportController::class, 'update_user']);
+
 Route::post('verify-otp', [PassportController::class, 'verifyOtp']);
 
 

@@ -90,8 +90,7 @@ public function store(Request $request)
           $cat = new Category();
             $cat = Category::find($id);
             
-            if(!$cat->isEmpty()){
-
+          
             $cat->category=$request->category;
             $cat->category_min_quantity=$request->category_min_quantity;
             $cat->category_max_quantity=$request->category_max_quantity;
@@ -104,11 +103,6 @@ public function store(Request $request)
             'message' => 'Category Details Updated Successfully.'
         ], 200);
 
-            }
-             return response()->json([
-            'success' => true,
-            'message' => 'Category Details Not Found .'
-        ], 404);
             
          } 
 
