@@ -27,7 +27,7 @@ Route::get('get-users', [PassportController::class, 'allusers']);
 Route::post('single-user/{id}', [PassportController::class, 'single_user']);
 Route::post('reset-password', [PassportController::class, 'password_reset']);
 Route::post('{id}/update-user', [PassportController::class, 'update_user']);
-
+Route::post('delete-user/{id}', [PassportController::class, 'destroy_user']);
 Route::post('verify-otp', [PassportController::class, 'verifyOtp']);
 
 
@@ -44,6 +44,8 @@ Route::get('showall-prod', [ProductsController::class, 'allproducts']);
 Route::post('show-single_pro/{id}',[ProductsController::class, 'show_single_product']);
 Route::post('delete-pro/{id}', [ProductsController::class, 'destroy_product']);
 Route::post('{id}/update-pro',[ProductsController::class,'update_products']);
+Route::post('single_pro_by_user/{id}',[ProductsController::class, 'show_product_by_user']);
+Route::get('approve-products',[ProductsController::class, 'show_app_product']);
 
 
 

@@ -38,7 +38,7 @@ class ProductsController extends Controller
         $validator = Validator::make($input, [
           
             'Product_name'=>'required|string',
-            'Product_Category' => 'required|string|exists:Categories,category',
+            'Product_Category' => 'required|string|exists:categories,category',
             'Product_Description' => 'required|string',
             'Product_Per_Price'=>'required|string',
             'Product_Available_Qty' => 'required|string',
@@ -66,7 +66,7 @@ class ProductsController extends Controller
 
 
             $newname=rand().'.'.$images->getClientOriginalExtension();
-            $images->move('storage/app/public/uploads/pages',$newname);
+            $images->move('storage/app/public/uploads/products',$newname);
             $imageName=$imageName.$newname;
 
             $full_image=$imagepath."/".$imageName;
@@ -142,7 +142,7 @@ class ProductsController extends Controller
 
 
             $newname=rand().'.'.$images->getClientOriginalExtension();
-            $images->move('storage/app/public/uploads/pages',$newname);
+            $images->move('storage/app/public/uploads/products',$newname);
             $imageName=$imageName.$newname;
 
             $full_image=$imagepath."/".$imageName;  
@@ -154,7 +154,7 @@ class ProductsController extends Controller
             $pro->Product_Available_Qty=$request->Product_Available_Qty;
             $pro->Product_Description=$request->Product_Description;
 
-            $pro->user_id=$request->user_id;
+            // $pro->user_id=$request->user_id;
             $pro->Product_Status=$request->Product_Status;
             $pro->Product_Description=$request->Product_Description;
               $pro->Product_Image=$input['Product_Image']=$full_image; 
@@ -164,7 +164,7 @@ class ProductsController extends Controller
             
             return response()->json([
             'success' => true,
-            'message' => 'Category Details Updated Successfully.'
+            'message' => 'Products Details Updated Successfully.'
         ], 200);
 
             
@@ -213,11 +213,61 @@ class ProductsController extends Controller
         return response()->json([
                 'success' => true,
                 'message' => 'Products Details Found',
-                'Category' => $pro
+                'Product' => $pro
             ], 200);
 
       
     }
+
+public function show_product_by_user(Request $request , $id)
+    {
+         $pro = Products::where('user_id',$id)->get();
+      // $ids = $request->input('ids', []); // via injected instance of Request
+      // $items1 = items::whereIn('id', explode(',', $id))->get();
+      // $items1 = items::whereIn('id', explode(',', $id->$request->get()));
+        
+        if ($pro->isEmpty()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Products Details Not Found'
+            ], 404);
+        }
+
+        return response()->json([
+                'success' => true,
+                'message' => 'Products Details Found',
+                'Product' => $pro
+            ], 200);
+
+      
+    }
+
+
+
+public function show_app_product(Request $request)
+    {
+         $pro = Products::where('Product_Status','Approved')->get();
+      // $ids = $request->input('ids', []); // via injected instance of Request
+      // $items1 = items::whereIn('id', explode(',', $id))->get();
+      // $items1 = items::whereIn('id', explode(',', $id->$request->get()));
+        
+        if ($pro->isEmpty()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Products Details Not Found'
+            ], 404);
+        }
+
+        return response()->json([
+                'success' => true,
+                'message' => 'Products Details Found',
+                'Product' => $pro
+            ], 200);
+
+      
+    }
+
+
 
 
 

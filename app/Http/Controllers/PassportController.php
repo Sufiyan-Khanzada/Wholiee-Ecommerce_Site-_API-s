@@ -239,7 +239,19 @@ public function password_reset(Request $request)
     }
 
 
+public function destroy_user($id)
+          {
+        $delete_user= User::find($id);
+    
+        $delete_user->delete();
+ 
+        return response()->json([
+            'success' => true,
+            'message' =>'User Deleted Successfully Done.'
+        ], 200);
+    
 
+}
 
 
 
